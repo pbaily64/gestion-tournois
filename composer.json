@@ -1,0 +1,35 @@
+{
+    "name": "rmcf/gestion-tournois",
+    "description": "Module de gestion des tournois du Royal Mickey Club Falisolle",
+    "type": "project",
+    "license": "proprietary",
+    "require": {
+        "php": "~8.2.0",
+        "ext-pdo": "*",
+        "ext-mbstring": "*",
+        "ext-gd": "*",
+        "mpdf/mpdf": "^8.2"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^10.5"
+    },
+    "autoload": {
+        "psr-4": {
+            "RMCF\\Tournois\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "RMCF\\Tournois\\Tests\\": "tests/"
+        }
+    },
+    "config": {
+        "sort-packages": true,
+        "platform": {
+            "php": "8.2.30"
+        }
+    },
+    "scripts": {
+        "test": "phpunit"
+    }
+}

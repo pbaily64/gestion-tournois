@@ -1,0 +1,35 @@
+<?php
+
+declare(strict_types=1);
+
+/**
+ * MODELE. A copier en config.local.php et a completer.
+ *
+ * config.local.php est ignore par Git : il ne doit JAMAIS etre
+ * versionne, ni copie tel quel d'un environnement a l'autre.
+ *
+ * DEVELOPPEMENT : base_url = '/gestion_tournois_dev', debug = true
+ * PRODUCTION    : base_url = '/gestion_tournois',     debug = false
+ */
+
+return [
+    // Segment d'URL, sans slash final.
+    'base_url' => '/gestion_tournois_dev',
+
+    // Affichage des erreurs a l'ecran. TOUJOURS false en production.
+    'debug'    => true,
+
+    'db' => [
+        // Nom du service MariaDB sur le reseau Docker.
+        // JAMAIS 'localhost' : depuis le conteneur PHP, la base est
+        // une autre machine.
+        'host' => 'mariadb',
+        'port' => 3306,
+        'name' => 'mickey_tournois_dev',
+        'user' => 'tournois',
+        'pass' => 'A_REMPLACER',
+    ],
+
+    // Base dediee au module -> pas de prefixe de tables.
+    'prefix' => '',
+];

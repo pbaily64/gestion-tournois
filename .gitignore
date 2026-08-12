@@ -1,0 +1,15 @@
+# Configuration locale : contient les identifiants de base de donnees
+/config/config.local.php
+
+# Dependances installees par Composer
+/vendor/
+
+# Editeurs
+.idea/
+.vscode/*
+!.vscode/launch.json
+
+# Divers
+*.log
+.DS_Store
+Thumbs.db
