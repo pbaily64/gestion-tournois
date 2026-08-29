@@ -16,8 +16,20 @@ return [
     // Segment d'URL, sans slash final.
     'base_url' => '/gestion_tournois_dev',
 
+    // Racine du site du club, sur le disque, telle que vue depuis le
+    // conteneur PHP. Le module y trouve config/, includes/header.php
+    // et includes/footer.php.
+    'site_path' => '/var/www/html2',
+
+    // Roles autorises a gerer les tournois (colonne `role` de `users`).
+    // 'admin' seul si la gestion doit rester reservee au comite.
+    'roles_gestion' => ['admin', 'editor'],
+
+    // Tournoi affiche par defaut. NULL = le dernier en cours.
+    'tournoi_defaut' => null,
+
     // Affichage des erreurs a l'ecran. TOUJOURS false en production.
-    'debug'    => true,
+    'debug' => true,
 
     'db' => [
         // Nom du service MariaDB sur le reseau Docker.
