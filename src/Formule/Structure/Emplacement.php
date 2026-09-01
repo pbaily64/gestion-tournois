@@ -36,8 +36,21 @@ final class Emplacement
     ) {
     }
 
+    /**
+     * Le camp correspondant a une entite.
+     *
+     * Une entite PROVISOIRE — la place d'un qualifie de barrage non
+     * encore joue — ne produit pas un camp connu mais une place a
+     * pourvoir. C'est ce qui empeche la table de marque d'appeler un
+     * joueur contre un adversaire qui dispute encore son barrage,
+     * tout en laissant le tableau a sa taille definitive.
+     */
     public static function entite(Entite $entite): self
     {
+        if ($entite->provisoire) {
+            return self::qualifie($entite->ref, $entite->libelle);
+        }
+
         return new self(self::ENTITE, $entite->ref, $entite->libelle);
     }
 

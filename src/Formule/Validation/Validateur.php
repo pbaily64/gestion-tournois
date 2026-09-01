@@ -372,7 +372,9 @@ final class Validateur
             ) {
                 $anomalies[] = Anomalie::information(
                     sprintf(
-                        'Au-delà de %d entrants, un barrage sera intercalé automatiquement.',
+                        'Au-delà de %d qualifiés — et non de %d inscrits — un barrage sera '
+                        . 'intercalé automatiquement.',
+                        $flux->capaciteMax,
                         $flux->capaciteMax
                     ),
                     'RG-33',

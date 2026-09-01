@@ -52,14 +52,15 @@ final class GenerateurTableau implements Generateur
         $effectif       = $entrants->effectif();
 
         if ($effectif < 2) {
-            return new PhaseGeneree(
-                $phase,
-                $this->type,
-                [],
-                [],
-                [],
-                ['Moins de deux entrants : aucun tableau a produire.']
-            );
+            // Zero entrant n'est pas une anomalie : c'est l'etat normal
+            // d'un tableau dont la phase amont n'est pas encore close.
+            // Le dire autrement ferait passer un deroulement normal pour
+            // une panne, la ou l'organisateur n'a rien a corriger.
+            $message = $effectif === 0
+                ? 'En attente des qualifiés de la phase précédente.'
+                : 'Un seul entrant : aucune partie a disputer.';
+
+            return new PhaseGeneree($phase, $this->type, [], [], [], [$message]);
         }
 
         $taille = $this->taille($effectif, $p, $avertissements);

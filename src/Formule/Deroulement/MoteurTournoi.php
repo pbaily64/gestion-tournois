@@ -514,9 +514,9 @@ final class MoteurTournoi
         $places = [];
 
         for ($i = 1; $i <= max(0, $combien); $i++) {
-            $places[] = new Entite(
-                ref: $barrage . '#' . $i,
-                libelle: 'Qualifié du barrage ' . $i,
+            $places[] = Entite::aPourvoir(
+                $barrage . '#' . $i,
+                'Qualifié du barrage ' . $i,
             );
         }
 

@@ -43,7 +43,24 @@ final class Entite
         public readonly int $viesRestantes = 1,
         public readonly ?string $club = null,
         public readonly ?string $famille = null,
+        /**
+         * Place a pourvoir, dont le titulaire n'est pas encore designe.
+         *
+         * Une entite provisoire occupe une place dans la structure sans
+         * pouvoir jouer : c'est le cas des qualifies d'un barrage qui
+         * n'a pas encore eu lieu. Le drapeau est lu par
+         * `Emplacement::entite()`, qui produit alors une place a
+         * pourvoir plutot qu'un camp connu — sans quoi la table de
+         * marque appellerait un joueur contre un adversaire inexistant.
+         */
+        public readonly bool $provisoire = false,
     ) {
+    }
+
+    /** Une place a pourvoir, en attente de son titulaire. */
+    public static function aPourvoir(string $ref, string $libelle): self
+    {
+        return new self($ref, $libelle, 0, 0, null, 1, null, null, true);
     }
 
     /**
@@ -64,6 +81,7 @@ final class Entite
             $this->viesRestantes,
             $this->club,
             $this->famille,
+            $this->provisoire,
         );
     }
 
@@ -85,6 +103,7 @@ final class Entite
             $this->viesRestantes,
             $this->club,
             $this->famille,
+            $this->provisoire,
         );
     }
 
@@ -100,6 +119,7 @@ final class Entite
             max(0, $this->viesRestantes - 1),
             $this->club,
             $this->famille,
+            $this->provisoire,
         );
     }
 
@@ -119,6 +139,7 @@ final class Entite
             'origine'         => $this->origine,
             'vies_restantes'  => $this->viesRestantes,
             'club'            => $this->club,
+            'provisoire'      => $this->provisoire,
         ];
     }
 }

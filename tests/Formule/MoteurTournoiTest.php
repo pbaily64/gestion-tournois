@@ -13,6 +13,7 @@ use RMCF\Tournois\Formule\Flux\Flux;
 use RMCF\Tournois\Formule\Flux\ResultatsEnMemoire;
 use RMCF\Tournois\Formule\Flux\Selecteur;
 use RMCF\Tournois\Formule\Generation\GenerateurCroise;
+use RMCF\Tournois\Formule\Structure\Emplacement;
 use RMCF\Tournois\Formule\Parametres;
 use RMCF\Tournois\Formule\Structure\Entite;
 use RMCF\Tournois\Formule\Structure\Plateau;
@@ -194,6 +195,66 @@ final class MoteurTournoiTest extends TestCase
         ));
 
         self::assertCount(4, $reservees);
+    }
+
+    public function testUnePlaceDeBarrageNEstPasLancable(): void
+    {
+        // LE TEST QUI MANQUAIT. Le precedent verifiait que le tableau
+        // fait bien 16 places sans exempt — ce qui etait vrai — mais
+        // aucun ne verifiait que ces places sont JOUABLES. Les quatre
+        // matchs adosses au barrage etaient annonces lancables, et la
+        // table de marque aurait appele un joueur contre un adversaire
+        // encore en train de disputer son barrage.
+        $resultats = new ResultatsEnMemoire();
+
+        for ($p = 0; $p < 10; $p++) {
+            $poule = chr(ord('A') + $p);
+            $resultats->classer('poules', $poule, array_map(
+                static fn (int $place): string => $place . $poule,
+                [1, 2, 3, 4]
+            ));
+        }
+
+        $genere  = $this->moteur($resultats)
+            ->generer(Prereglages::mbnClassique(), $this->inscrits(40));
+        $tableau = $genere->phase('tableau');
+
+        self::assertNotNull($tableau);
+
+        $premierTour = $tableau->appariementsDuTour(1);
+
+        self::assertCount(8, $premierTour);
+
+        $enAttente = 0;
+
+        foreach ($premierTour as $appariement) {
+            $adossee = false;
+
+            foreach ([$appariement->a, $appariement->b] as $cote) {
+                if (str_contains((string) $cote->reference, 'tableau_barrage#')) {
+                    $adossee = true;
+
+                    // La place doit etre exprimee comme « a pourvoir »,
+                    // pas comme un camp connu.
+                    self::assertSame(Emplacement::QUALIFIE, $cote->nature);
+                }
+            }
+
+            if ($adossee) {
+                $enAttente++;
+                self::assertFalse(
+                    $appariement->estLancable(),
+                    $appariement->id . ' ne devrait pas être lançable'
+                );
+            }
+        }
+
+        self::assertSame(4, $enAttente);
+
+        // Le tableau garde sa taille : la correction ne doit pas
+        // reintroduire le defaut qu'elle avait repare.
+        self::assertSame(16, $tableau->meta['taille']);
+        self::assertSame(15, $tableau->nombreParties());
     }
 
     public function testLEstimationCorrespondAuVolumeReellementGenere(): void

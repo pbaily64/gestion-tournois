@@ -85,6 +85,10 @@ final class Prereglages
                 'handicap_actif'         => true,
                 'formule'                => 'sign(e)*min(8; abs(e)/2+1)',
                 'plafond'                => 8,
+                // Echelle AFTT : NC = 0, A = 17, donc rang haut = fort.
+                // L'expliciter neutralise RG-71, dont l'avertissement
+                // vise les referentiels ambigus, pas celui-ci.
+                'sens_echelle'           => 'rang_haut_fort',
                 'application'            => 'par_manche',
                 'type_format'            => 'manches_seches',
                 'nb_manches'             => 3,

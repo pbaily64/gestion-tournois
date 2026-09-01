@@ -69,10 +69,17 @@ final class MoteurFlux
             $selection = $this->selectionner($unFlux, $inscriptions, $prises[$unFlux->phaseSource] ?? []);
 
             if ($selection === []) {
-                $notes[$unFlux->phaseCible][] = sprintf(
-                    'Flux « %s » : aucune entite selectionnee.',
-                    $unFlux->description()
-                );
+                // On distingue « pas encore » de « jamais » : un flux en
+                // attente de cloture est normal, un flux qui ne trouve
+                // personne dans une phase close est un probleme reel.
+                $enAttente = ! $unFlux->depuisInscriptions()
+                    && $unFlux->selecteur->exigeCloture()
+                    && ! $this->resultats->estClose($unFlux->phaseSource);
+
+                $notes[$unFlux->phaseCible][] = $enAttente
+                    ? sprintf('En attente de la clôture de « %s ».', $unFlux->phaseSource)
+                    : sprintf('Flux « %s » : aucune entité sélectionnée.', $unFlux->description());
+
                 continue;
             }
 
